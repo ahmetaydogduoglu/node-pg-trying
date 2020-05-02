@@ -1,22 +1,29 @@
 const express = require("express");
 const app = express();
-const client = require("./helpers/pgConnect");
-const bodyParser = require('body-parser')
+//pg client
+const bodyParser = require('body-parser');
+//router
+const booksRouter = require("./routers/books");
+const authorsRouter = require("./routers/authors");
 
-
+//middlewares
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.get("/", (req, res, next) => {
-    client.query('SELECT * FROM deneme').then(result => {
-        res.json(result.rows);
-    }).catch(err => res.send(err).status(500));
+app.use("/api/books",booksRouter);
+app.use("/api/authors",authorsRouter);
+
+app.use((req,res,next)=>{
+    const error= new Error("Not Found");
+    error.status=404
+    next(error);
 })
 
-app.post("/", (req, res, next) => {
-    client.query(`INSERT INTO deneme (name) VALUES ($1)`, [req.body.name]).then(result => {
-        res.json(result.rows);
-    }).catch(err => res.send(err).status(500));
+app.use((err, req, res, next) => {
+    res.status(err.status || 500);
+    res.json({
+        message:err.message
+    });
 })
 
 app.listen(8080, () => {

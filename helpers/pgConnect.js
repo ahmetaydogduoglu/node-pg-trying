@@ -5,6 +5,6 @@ const client = new Client({
     connectionString: connectionString
 });
 
-client.connect();
+client.connect().then(()=>console.log("Connect to PG")).catch(err=>console.log(err));
 
 module.exports = client;
