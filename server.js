@@ -1,14 +1,14 @@
 const express = require("express");
 const app = express();
 //pg client
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 //router
 const booksRouter = require("./routers/books");
 const authorsRouter = require("./routers/authors");
 
 //middlewares
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json());
 
 app.use("/api/books",booksRouter);
 app.use("/api/authors",authorsRouter);

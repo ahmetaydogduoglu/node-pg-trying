@@ -14,15 +14,17 @@ router.get("/", (req, res, next) => {
 router.post("/", (req, res, next) => {
     client.query("INSERT INTO books (name,type,year,author_id) VALUES ($1,$2,$3,$4)",
         [req.body.name, req.body.type, parseInt(req.body.year), parseInt(req.body.author_id)]).then(result => {
-            res.send(result.rows)
+            res.json({
+                status:1,
+                message:"Book Added"
+            })
         }).catch(err => {
             next(err);
         })
 })
 
 router.put("/:id", (req, res, next) => {
-    client.query(`UPDATE books
-        SET 
+    client.query(`UPDATE books SET 
         name = $1,
         type = $2,
         year= $3,
